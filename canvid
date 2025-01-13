@@ -1,0 +1,8 @@
+#!/bin/sh
+
+python3 download.py "$1" "$2"
+
+python3 new_download.py \
+"https://cfvod.kaltura.com/scf/hls/p/1467031/sp/146703100/serveFlavor/entryId/1_jubez72y/v/1/ev/3/flavorId/1_85k4db5z/name/a.mp4/seg-{segment}-v1-a1.ts?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZnZvZC5rYWx0dXJhLmNvbS9zY2YvaGxzL3AvMTQ2NzAzMS9zcC8xNDY3MDMxMDAvc2VydmVGbGF2b3IvZW50cnlJZC8xX2p1YmV6NzJ5L3YvMS9ldi8zL2ZsYXZvcklkLzFfODVrNGRiNXovbmFtZS9hLm1wNC8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzM2Mjk2NDA2fX19XX0_&Signature=Rwzcz-EbZGiEpx%7E8wswGJl7rBJS211C0UKnvy7fPulAlEGTR8P6QCDxaf6cGRsaDWbaZWJUabQ7wAtmvxa9dqNqtOaAEWusF7NdgUMSuhb6tibPDc1-05ga9o5khqNRnfsp2IEcf1vTZw6PODwn4x6kAt68%7EYLit0QQxy7ZDSnXEBteaMOuw8jgU%7EaWxt8BlWCCaHCX%7EyNHNrZkUP9mPkGsQDQN1kUBRgHJCp4%7EYZSMxEkbtvDLsCF16CjXQOXroTMHU8NPI1bMXtJtjjeLXUF-suhFTSVLEnYeszyaN%7EHzVpCw11yVfiOGTMyilOong5MrvyILqAZFRzB4cwiqArQ__&Key-Pair-Id=APKAJT6QIWSKVYK3V34A" \
+"lec1"
+
