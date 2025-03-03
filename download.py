@@ -29,6 +29,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Start downloading segments
 segment_number = 1  # Start from segment 1
+failed_segments = []
 
 while True:
     segment_url = base_url.format(segment=segment_number)
@@ -48,17 +49,44 @@ while True:
 
     segment_number += 1
 
+# Check if any segments were downloaded
+if segment_number == 1:
+    print("No segments downloaded. Exiting...")
+    sys.exit(1)
+
 # Merge downloaded segments into a single file
 output_video_ts = f"{output_base_name}.ts"
-segment_files = os.path.join(output_dir, "seg-*.ts")
-
 print("Merging segments into a single .ts file...")
-subprocess.run(f"cat {segment_files} > {output_video_ts}", shell=True, check=True)
+
+try:
+    with open(output_video_ts, "wb") as outfile:
+        for num in range(1, segment_number):
+            segment_file = os.path.join(output_dir, f"seg-{num}.ts")
+            if os.path.exists(segment_file):
+                with open(segment_file, "rb") as infile:
+                    outfile.write(infile.read())
+            else:
+                failed_segments.append(segment_file)
+except Exception as e:
+    print(f"Error during merging: {e}")
+    sys.exit(1)
+
+# Log any failed segments
+if failed_segments:
+    with open("failed_segments.log", "w") as log:
+        log.write("\n".join(failed_segments))
+    print(f"Failed segments logged to failed_segments.log")
 
 # Convert merged .ts file to .mp4
 output_video_mp4 = f"{output_base_name}.mp4"
-print("Converting .ts file to .mp4...")
-subprocess.run(["ffmpeg", "-i", output_video_ts, "-c", "copy", output_video_mp4], check=True)
-
-print(f"Download, merge, and conversion complete. Output file: {output_video_mp4}")
+if os.path.exists(output_video_ts):
+    print("Converting .ts file to .mp4...")
+    try:
+        subprocess.run(["ffmpeg", "-i", output_video_ts, "-c", "copy", output_video_mp4], check=True)
+        print(f"Download, merge, and conversion complete. Output file: {output_video_mp4}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during conversion: {e}")
+        sys.exit(1)
+else:
+    print("Error: .ts file not found, conversion to .mp4 skipped.")
 

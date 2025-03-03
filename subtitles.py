@@ -1,5 +1,6 @@
 import re
 import sys
+import pyperclip
 from bs4 import BeautifulSoup
 
 def extract_subtitles_from_html(html_content):
@@ -36,23 +37,28 @@ def write_to_file(content, output_path):
         file.write(content)
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python generate_srt.py <html_file> <output_srt>")
+    if len(sys.argv) != 2:
+        print("Usage: python generate_srt.py <output_srt>")
         sys.exit(1)
 
-    html_file = sys.argv[1]
-    output_srt = sys.argv[2]
+    output_srt = sys.argv[1]
 
-    # Read HTML content
-    with open(html_file, "r", encoding="utf-8") as file:
-        html_content = file.read()
+    # Get clipboard content
+    clipboard_content = pyperclip.paste()
+
+    if not clipboard_content.strip():
+        print("Clipboard is empty. Please copy the HTML content first.")
+        sys.exit(1)
+
+    # Save clipboard content to subtitles.html
+    html_file = "subtitles.html"
+    write_to_file(clipboard_content, html_file)
 
     # Extract subtitles and save to SRT file
-    srt_content = extract_subtitles_from_html(html_content)
+    srt_content = extract_subtitles_from_html(clipboard_content)
     write_to_file(srt_content, output_srt)
 
     print(f"SRT file created successfully: {output_srt}")
 
 if __name__ == "__main__":
     main()
-
